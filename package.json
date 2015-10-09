@@ -10,5 +10,13 @@
   "license": "MIT",
   "devDependencies": {
     "babel": "^5.8.23"
+  },
+  "dependencies": {
+    "is": "^3.1.0",
+    "is-array": "^1.0.1",
+    "is-callable": "^1.1.0",
+    "is-iterable": "^1.0.2",
+    "is-iterator-like": "^1.0.4",
+    "is-object": "^1.0.1"
   }
 }
