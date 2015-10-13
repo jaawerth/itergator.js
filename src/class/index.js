@@ -28,27 +28,27 @@ const assign = require('../util/assign');
 //   }
 // };
 
-const { TakeIterator, MappingIterator, FilterIterator } = iterators;
+const { TakeIterator, MappingIterator } = iterators;
 const cat = require('../methods/cat');
 const iteratorFork = require('../methods/iterator-fork');
 const methods = {
   take(length) {
-    return new TakeIterator(length, toIterator(this)); 
+    return new TakeIterator(length, toIterator(this._wrapped)); 
   },
   map(mapFn) {
-    return new MappingIterator(mapFn, toIterator(this));
+    return new MappingIterator(mapFn, toIterator(this._wrapped));
   },
   concat(...args) {
-    return cat(args.concat(toIterator(this)));
+    return cat(args.concat(toIterator(this._wrapped)));
   },
   [ITERATOR]() {
-    return toIterator(this);
+    return toIterator(this._wrapped);
   },
   fork(n) {
-    return iteratorFork(n, toIterator(this));
+    return iteratorFork(n, toIterator(this._wrapped));
   },
-  toArray: Array.from ? function() { return Array.from(toIterator(this)); } : function() {
-    const iter = toIterator(this);
+  toArray: Array.from ? function() { return Array.from(toIterator(this._wrapped)); } : function() {
+    const iter = toIterator(this._wrapped);
     const result = [];
     for (let nextVal = iter.next(); !nextVal.done; nextVal = iter.next()) {
       result.push(nextVal.value);

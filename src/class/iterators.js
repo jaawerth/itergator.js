@@ -17,6 +17,9 @@ const methods = {
   map(mapFn) {
     return new MappingIterator(mapFn, this);
   },
+  filter(pred) {
+    return new FilterIterator(pred, this);
+  },
   concat(...args) {
     return cat(args.concat(this));
   },
@@ -41,9 +44,10 @@ function Iterator() {
 }
 Iterator.prototype = methods;
 
-inherit(MappingIterator, null, assign({}, methods, MappingIterator.prototype));
-inherit(FilterIterator, null, assign({}, methods, FilterIterator.prototype));
-inherit(RangeIterator, null, assign({}, methods, RangeIterator.prototype));
+inherit(MappingIterator, methods, assign({}, MappingIterator.prototype));
+inherit(FilterIterator, methods, assign({}, FilterIterator.prototype));
+inherit(RangeIterator, methods, assign({}, RangeIterator.prototype));
+
 
 function IteratorIterator(iterator) {
   this._iterIterator = toIterator(iterator);
@@ -70,19 +74,19 @@ function ObjectIterator(obj) {
   this._keys = Object.keys(obj);
   this._step = -1;
 }
-inherit(ObjectIterator, null, methods);
+inherit(ObjectIterator, methods);
 
 ObjectIterator.prototype.next = function() {
   const key = this._keys[++this._step];
   if (this._step >= this._keys.length) return { value: undefined, done: true };
-  return { value: this._obj[key], done: false };
+  return { value: [key, this._obj[key]], done: false };
 };
 
 function ArrayIterator(arr) {
   this._arr = arr;
   this._i = -1;
 }
-inherit(ArrayIterator, null, methods);
+inherit(ArrayIterator, methods);
 
 ArrayIterator.prototype.next = function() {
   return { value: this._arr[++this._i], done: this._i >= this._arr.length };
@@ -91,7 +95,7 @@ ArrayIterator.prototype.next = function() {
 function WrappingIterator(iterator) {
   this._iter = toIterator(iterator);
 }
-inherit(WrappingIterator, null, methods);
+inherit(WrappingIterator, methods);
 
 WrappingIterator.prototype.next = function() {
   return this._iter.next();
@@ -102,7 +106,7 @@ WrappingIterator.prototype.next = function() {
 function TakeIterator(length, iterator) {
   if (!isInteger(length) || length < 0) throw new TypeError(`length must be integer >= 0, got ${length}`);
   WrappingIterator.call(this, iterator);
-  this._length = length;
+  this._length = length + 1;
   this._i = 0;
 }
 inherit(TakeIterator, WrappingIterator, methods);
@@ -123,7 +127,7 @@ function SubIterator(base, iters, index) {
   // Object.freeze(this);
 }
 
-inherit(SubIterator, null, methods);
+inherit(SubIterator, methods);
 
 SubIterator.prototype.next = function() {
   if (!this._queue.length) return this._queue.shift();

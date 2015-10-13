@@ -5,8 +5,8 @@
 const toIterator = require('../methods/to-iterator');
 // const selfIterator = require('../methods/iterator-return-self');
 
-function MappingIterator(iterable, mapFn, thisArg) {
-  this._mapper = thisArg || thisArg === null ? mapFn.bind(thisArg) : thisArg;
+function MappingIterator(mapFn, iterable, thisArg) {
+  this._mapper = (thisArg || thisArg === null) ? mapFn.bind(thisArg) : mapFn;
   this._iter = toIterator(iterable);
 }
 
@@ -16,7 +16,7 @@ MappingIterator.prototype.next = function() {
   return { value: this._mapper(nextVal.value), done: false };
 };
 
-function FilterIterator(iterable, predicate, thisArg) {
+function FilterIterator(predicate, iterable) {
   this._predicate = predicate;
   this._iter = toIterator(iterable);
 }
