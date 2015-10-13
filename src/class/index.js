@@ -1,16 +1,19 @@
 'use strict';
 
 const typed = require('./type-iterators');
+const RangeIterator = require('./range-iterator');
+const { MappingIterator } = require('./mapping-iterators');
 const toIterator = require('../methods/to-iterator');
-class IterGator {
-  constructor(value) {
-    this._wrapped = value;
-  }
-  [Symbol.iterator]() {
-    return toIterator(this._wrapped);
-  }
+function IterGator(value) {
+  this._wrapped = value;
 }
 
+IterGator.prototype[Symbol.iterator] = function gatorIterator() {
+  return toIterator(this._wrapped);
+};
+  
 
 
-module.exports = Object.assign({}, typed);
+
+
+module.exports = Object.assign({}, typed, {IterGator, MappingIterator, RangeIterator});

@@ -15,6 +15,7 @@
     "is": "^3.1.0",
     "is-array": "^1.0.1",
     "is-callable": "^1.1.0",
+    "is-integer": "^1.0.6",
     "is-iterable": "^1.0.2",
     "is-iterator-like": "^1.0.4",
     "is-object": "^1.0.1"
