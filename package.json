@@ -9,9 +9,12 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "babel": "^5.8.23"
+    "babel": "^5.8.23",
+    "chai": "^3.3.0",
+    "mocha": "^2.3.3"
   },
   "dependencies": {
+    "core.lambda": "^1.0.0",
     "is-array": "^1.0.1",
     "is-callable": "^1.1.0",
     "is-integer": "^1.0.6",

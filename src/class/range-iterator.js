@@ -1,9 +1,8 @@
 'use strict';
-const { ITERATOR } = require('../protocols');
-const assign = require('../util/assign');
-const selfIterator = require('../methods/iterator-return-self');
+// const { ITERATOR } = require('../protocols');
+// const assign = require('../util/assign');
 const isInteger = require('is-integer');
-const PROTO = require('./proto-methods');
+// const PROTO = require('./proto-methods');
 function RangeIterator(start, end) {
   if (!isInteger(start)) throw new Error(`Parameter 'start' must be an integer, got ${start}`);
   if (typeof end === 'undefined') {
@@ -22,6 +21,5 @@ RangeIterator.prototype.next = function() {
   return { done: false, value: this.start + i };
 };
 
-assign(RangeIterator.prototype, PROTO);
 
 module.exports = RangeIterator;
