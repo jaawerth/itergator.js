@@ -7,7 +7,7 @@
     "test": "mocha --recursive test/",
     "build": "babel src/ -d dist/ && npm test"
   },
-  "author": "",
+  "author": "Jesse Wertheim (https://github.com/jaawerth)",
   "license": "MIT",
   "devDependencies": {
     "babel": "^5.8.23",
@@ -22,5 +22,9 @@
     "is-iterable": "^1.0.2",
     "is-iterator-like": "^1.0.4",
     "is-object": "^1.0.1"
+  },
+ "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jaawerth/itergator.js.git"
   }
 }
