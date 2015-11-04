@@ -2,14 +2,16 @@
   "name": "itergator",
   "version": "1.0.0",
   "description": "Create iterators with higher-order functions available such as .map, .forEach, .reduce, .flatMap, etc",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "mocha --recursive test/**/*.spec.js"
+    "build": "babel src/ -d dist/",
+    "test": "tap-prettify test/**/*.spec.js"
   },
   "author": "Jesse Wertheim (https://github.com/jaawerth)",
   "license": "MIT",
   "devDependencies": {
     "babel": "^5.8.23",
+    "tap-prettify": "0.0.2",
     "tape": "^4.2.2"
   },
   "dependencies": {
