@@ -4,15 +4,13 @@
   "description": "Create iterators with higher-order functions available such as .map, .forEach, .reduce, .flatMap, etc",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --recursive test/",
-    "build": "babel src/ -d dist/ && npm test"
+    "test": "mocha --recursive test/**/*.spec.js"
   },
   "author": "Jesse Wertheim (https://github.com/jaawerth)",
   "license": "MIT",
   "devDependencies": {
     "babel": "^5.8.23",
-    "chai": "^3.3.0",
-    "mocha": "^2.3.3"
+    "tape": "^4.2.2"
   },
   "dependencies": {
     "core.lambda": "^1.0.0",
@@ -23,7 +21,7 @@
     "is-iterator-like": "^1.0.4",
     "is-object": "^1.0.1"
   },
- "repository": {
+  "repository": {
     "type": "git",
     "url": "git+https://github.com/jaawerth/itergator.js.git"
   }
