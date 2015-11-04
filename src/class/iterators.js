@@ -1,15 +1,13 @@
 'use strict';
-const inherit = require('../util/inherit');
-const assign = require('../util/assign');
-const isInteger = require('is-integer');
+const inherit                             = require('../util/inherit');
+const isInteger                           = require('is-integer');
 
-const { ITERATOR } = require('../protocols');
-const toIterator = require('../methods/to-iterator');
-const iteratorFork = require('../methods/iterator-fork');
-const cat = require('../methods/cat');
+const { ITERATOR }                        = require('../protocols');
+const toIterator                          = require('../methods/to-iterator');
 const { MappingIterator, FilterIterator } = require('./mapping-iterators');
-const RangeIterator = require('./range-iterator');
-
+const RangeIterator                       = require('./range-iterator');
+const toArray                             = require('../methods/to-array');
+const reduce                              = require('../methods/iterator-reduce');
 function Iterator() {
 
 }
@@ -17,6 +15,12 @@ function Iterator() {
 Iterator.prototype = {
   [ITERATOR]() {
     return this;
+  },
+  toArray() {
+    return toArray(this);
+  },
+  reduce(reducerFn, init) {
+    return reduce(reducerFn, init, this);
   }
 };
 

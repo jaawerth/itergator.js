@@ -17,14 +17,7 @@ const methods = {
     return cat(args);
   },
   fork,
-  toArray: Array.from || function() {
-    const iter = toIterator(this);
-    const result = [];
-    for (let nextVal = iter.next(); !nextVal.done; nextVal = iter.next()) {
-      result.push(nextVal.value);
-    }
-    return result;
-  },
+
   take: curry(2, take),
   map: curry(2, map),
   range: curry(2, range)
