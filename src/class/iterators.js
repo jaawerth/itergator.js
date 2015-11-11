@@ -1,13 +1,14 @@
 'use strict';
-const inherit                             = require('../util/inherit');
-const isInteger                           = require('is-integer');
+const inherit                                         = require('../util/inherit');
+const isInteger                                       = require('is-integer');
 
-const { ITERATOR }                        = require('../protocols');
-const toIterator                          = require('../methods/to-iterator');
-const { MappingIterator, FilterIterator } = require('./mapping-iterators');
-const RangeIterator                       = require('./range-iterator');
-const toArray                             = require('../methods/to-array');
-const reduce                              = require('../methods/iterator-reduce');
+const { ITERATOR }                                    = require('../protocols');
+const toIterator                                      = require('../methods/to-iterator');
+const { MappingIterator, FilterIterator }             = require('./mapping-iterators');
+const RangeIterator                                   = require('./range-iterator');
+const {toArray, filter, map, reduce, cat, uniq, take} = require('../methods');
+//const toArray                             = require('../methods/to-array');
+//const reduce                              = require('../methods/iterator-reduce');
 function Iterator() {
 
 }
@@ -21,7 +22,25 @@ Iterator.prototype = {
   },
   reduce(reducerFn, init) {
     return reduce(reducerFn, init, this);
-  }
+  },
+  filter(predicate) {
+    return filter(predicate, this);
+  },
+  map(mapper) {
+    return map(mapper, this);
+  },
+  concat(...args) {
+    return cat([this].concat(args));
+  },
+  take(n) {
+    return take(n, this);
+  },
+  uniq() {
+    return uniq(this);
+  },
+  cat() {
+   return cat(this);
+  } 
 };
 
 function IteratorIterator(iterator) {
