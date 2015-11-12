@@ -1,19 +1,12 @@
 'use strict';
-const inherit                                         = require('../util/inherit');
 const isInteger                                       = require('is-integer');
-
+const assign                                          = require('../util/assign');
 const { ITERATOR }                                    = require('../protocols');
 const toIterator                                      = require('../methods/to-iterator');
-const { MappingIterator, FilterIterator }             = require('./mapping-iterators');
-const RangeIterator                                   = require('./range-iterator');
 const {toArray, filter, map, reduce, cat, uniq, take} = require('../methods');
-//const toArray                             = require('../methods/to-array');
-//const reduce                              = require('../methods/iterator-reduce');
-function Iterator() {
 
-}
 
-Iterator.prototype = {
+const baseProto = {
   [ITERATOR]() {
     return this;
   },
@@ -39,7 +32,7 @@ Iterator.prototype = {
     return uniq(this);
   },
   cat() {
-   return cat(this);
+    return cat(this);
   } 
 };
 
@@ -48,7 +41,7 @@ function IteratorIterator(iterator) {
   this._done = null;
   this._iter = null;
 }
-inherit(IteratorIterator, Iterator);
+assign(IteratorIterator.prototype, baseProto);
 
 IteratorIterator.prototype.next = function() {
   if (this._done) return { value: undefined, done: true };
@@ -68,7 +61,7 @@ function ObjectIterator(obj) {
   this._keys = Object.keys(obj);
   this._step = -1;
 }
-inherit(ObjectIterator, Iterator);
+assign(ObjectIterator.prototype, baseProto);
 
 ObjectIterator.prototype.next = function() {
   const key = this._keys[++this._step];
@@ -80,7 +73,7 @@ function ArrayIterator(arr) {
   this._arr = arr;
   this._i = -1;
 }
-inherit(ArrayIterator, Iterator);
+assign(ArrayIterator.prototype, baseProto);
 
 ArrayIterator.prototype.next = function() {
   return { value: this._arr[++this._i], done: this._i >= this._arr.length };
@@ -89,7 +82,7 @@ ArrayIterator.prototype.next = function() {
 function WrappingIterator(iterator) {
   this._iter = toIterator(iterator);
 }
-inherit(WrappingIterator, Iterator);
+assign(WrappingIterator.prototype, baseProto);
 
 WrappingIterator.prototype.next = function() {
   return this._iter.next();
@@ -103,7 +96,7 @@ function TakeIterator(length, iterator) {
   this._length = length;
   this._i = 0;
 }
-inherit(TakeIterator, WrappingIterator);
+assign(TakeIterator.prototype, WrappingIterator.prototype);
 
 TakeIterator.prototype.next = function() {
   const nextVal = this._iter.next();
@@ -119,7 +112,7 @@ function SubIterator(base, iters, index) {
   // Object.freeze(this);
 }
 
-inherit(SubIterator, Iterator);
+assign(SubIterator.prototype, baseProto);
 
 SubIterator.prototype.next = function() {
   if (!this._queue.length) return this._queue.shift();
@@ -131,8 +124,48 @@ SubIterator.prototype.next = function() {
   return nextVal;
 };
 
+function MappingIterator(mapFn, iterable, thisArg) {
+  this._mapper = (thisArg || thisArg === null) ? mapFn.bind(thisArg) : mapFn;
+  this._iter = toIterator(iterable);
+}
+
+MappingIterator.prototype.next = function() {
+  const nextVal = this._iter.next();
+  if (nextVal.done) return nextVal;
+  return { value: this._mapper(nextVal.value), done: false };
+};
+
+function FilterIterator(predicate, iterable) {
+  this._predicate = predicate;
+  this._iter = toIterator(iterable);
+}
+
+FilterIterator.prototype.next = function() {
+  let nextVal = this._iter.next(); 
+  while(!nextVal.done && !this._predicate(nextVal.value)) {
+    nextVal = this._iter.next();  
+  }
+  return nextVal;
+};
+
+const abs = Math.abs;
+
+function RangeIterator(start, end, step = 1) {
+  if (!isInteger(start)) throw new Error(`Parameter 'start' must be an integer, got ${start}`);
+  if (!isInteger(end)) throw new Error(`Parameter 'end' must be an integer, got ${end}`);
+  this.start = start;
+  this.end = end;
+  this._distance = end - start;
+  this._delta = 0;
+  this._step = (end >= start) ? step : -step;
+}
+
+RangeIterator.prototype.next = function() {
+  const d = this._delta += this.delta;
+  return { done: abs(d) > abs(this._distance), value: this.start + d };
+};
+
 module.exports = {
-  Iterator,
   ArrayIterator, 
   ObjectIterator, 
   WrappingIterator, 
