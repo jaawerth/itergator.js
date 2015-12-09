@@ -2,8 +2,7 @@
 const isInteger                                       = require('is-integer');
 const assign                                          = require('../util/assign');
 const { ITERATOR }                                    = require('../protocols');
-const toIterator                                      = require('../methods/to-iterator');
-const {toArray, filter, map, reduce, cat, uniq, take} = require('../methods');
+const {toArray, filter, map, reduce, cat, uniq, take, toIterator} = require('../methods');
 
 
 const baseProto = {
